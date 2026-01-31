@@ -1,0 +1,44 @@
+/* 公共的css */
+
+/*  初始字体 */
+#app {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+/* 渐变字体颜色 */
+.Gradual {
+  font-size: 30px;
+  /* font-family: "黑体"; */
+  color: #898989;
+  background: -webkit-linear-gradient(45deg, #39eef6, #f86527, #fcd72d, #5f2cf8, #bed5f5);
+  color: transparent;
+  /*设置字体颜色透明*/
+  -webkit-background-clip: text;
+  background-clip: text;
+  /*背景裁剪为文本形式*/
+  animation: ran 15s linear infinite;
+  /*动态10s展示*/
+}
+
+@keyframes ran {
+  from {
+    backgroud-position: 0 0;
+  }
+  to {
+    background-position: 2000px 0;
+  }
+}
+
+/* 单行文字省略 */
+.eclipse {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/*  多行文本省略样式 */
+.eclipsis {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
