@@ -245,31 +245,31 @@ export default {
     // 分页按钮切换
     psize(val) {
       this.currentPage = val;
-      this.limitPlaylists = this.playlists.slice(12 * (val - 1), 12 * val);
+      this.limitPlaylists = Array.isArray(this.playlists) ? this.playlists.slice(12 * (val - 1), 12 * val) : [];
     },
     msize(val) {
       this.mvCurPage = val;
-      this.limitMvList = this.mvList.slice(12 * (val - 1), 12 * val);
+      this.limitMvList = Array.isArray(this.mvList) ? this.mvList.slice(12 * (val - 1), 12 * val) : [];
       // console.log(this.currentPage);
     },
     // 下一页
     nextP() {
       this.currentPage += 1;
-      this.limitPlaylists = this.playlists.slice(12 * (this.currentPage - 1), 12 * this.currentPage);
+      this.limitPlaylists = Array.isArray(this.playlists) ? this.playlists.slice(12 * (this.currentPage - 1), 12 * this.currentPage) : [];
     },
     MvnextP() {
       this.mvCurPage += 1;
-      this.limitMvList = this.mvList.slice(12 * (this.mvCurPage - 1), 12 * this.mvCurPage);
+      this.limitMvList = Array.isArray(this.mvList) ? this.mvList.slice(12 * (this.mvCurPage - 1), 12 * this.mvCurPage) : [];
       // console.log("下一页", this.mvCurPage);
     },
     // 上一页
     prevP() {
       this.currentPage -= 1;
-      this.limitPlaylists = this.playlists.slice(12 * (this.currentPage - 1), 12 * this.currentPage);
+      this.limitPlaylists = Array.isArray(this.playlists) ? this.playlists.slice(12 * (this.currentPage - 1), 12 * this.currentPage) : [];
     },
     MvprevP() {
       this.mvCurPage -= 1;
-      this.limitMvList = this.mvList.slice(12 * (this.mvCurPage - 1), 12 * this.mvCurPage);
+      this.limitMvList = Array.isArray(this.mvList) ? this.mvList.slice(12 * (this.mvCurPage - 1), 12 * this.mvCurPage) : [];
       // console.log("上一页", this.mvCurPage);
     },
     // 退出登录
@@ -306,10 +306,11 @@ export default {
     // tab栏切换
     handleClick(tab, event) {
       this.topPlaySongs = []; //清空之前的歌曲
-      // console.log(this.topList[tab.index].id);
+      if (!this.topList[tab.index]) return;
       // 点击请求排行数据
       this.$http.get(`${MUSIC_API}playlist/detail?id=${this.topList[tab.index].id}`).then((res) => {
-        this.topPlaySongs = res.data.playlist.tracks.slice(0, 20);
+        const tracks = res.data?.playlist?.tracks || [];
+        this.topPlaySongs = tracks.slice(0, 20);
         // 滚动到最底部
       });
     },
@@ -375,29 +376,33 @@ export default {
     }
     // 请求轮播图数据
     this.$http.get(`${MUSIC_API}banner`).then((bdata) => {
-      this.banners = bdata.data.banners;
+      this.banners = bdata.data?.banners || [];
       // console.log(this.banners);
     });
     // 请求热门歌单数据
     this.$http.get(`${MUSIC_API}top/playlist/highquality`).then((hdata) => {
-      this.playlists = hdata.data.playlists;
-      this.limitPlaylists = this.playlists.slice(0, 12);
+      this.playlists = hdata.data?.playlists || [];
+      this.limitPlaylists = Array.isArray(this.playlists) ? this.playlists.slice(0, 12) : [];
     });
 
     // 请求排行榜数据
     this.$http.get(`${MUSIC_API}toplist/detail`).then((pdata) => {
-      this.topList = pdata.data.list.slice(0, 8);
+      const list = pdata.data?.list || [];
+      this.topList = list.slice(0, 8);
       // console.log(this.topList);
       // 请求第一页数据
-      this.$http.get(`${MUSIC_API}playlist/detail?id=${this.topList[0].id}`).then((res) => {
-        this.topPlaySongs = res.data.playlist.tracks.slice(0, 20);
-      });
+      if (this.topList.length > 0) {
+        this.$http.get(`${MUSIC_API}playlist/detail?id=${this.topList[0].id}`).then((res) => {
+          const tracks = res.data?.playlist?.tracks || [];
+          this.topPlaySongs = tracks.slice(0, 20);
+        });
+      }
     });
 
     // 请求最新MV数据
     this.$http.get(`${MUSIC_API}mv/first`).then((mres) => {
-      this.mvList = mres.data.data;
-      this.limitMvList = this.mvList.slice(0, 12);
+      this.mvList = mres.data?.data || [];
+      this.limitMvList = Array.isArray(this.mvList) ? this.mvList.slice(0, 12) : [];
     });
   },
 

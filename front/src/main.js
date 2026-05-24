@@ -18,11 +18,11 @@ Vue.use(VideoPlayer);
 if (process.env.NODE_ENV === "production") {
   // 生产环境的逻辑
   //根url路径
-  axios.defaults.baseURL = "http://127.0.0.1:5001";
+  axios.defaults.baseURL = "http://120.48.51.185:5002";
 } else {
   // 开发环境的逻辑
   //根url路径  music-api
-  axios.defaults.baseURL = "http://127.0.0.1:5001";
+  axios.defaults.baseURL = "http://120.48.51.185:5002";
 }
 
 //配置超时时间
